@@ -1,0 +1,20 @@
+Deploy BE to local: 
+chú ý Dockerfile_local: change ip & data source name that suitable for your computer & database
+At the folder of project run follows:
+
+1. mvn clean install
+2. docker build -f Dockerfile_local -t  agile_skills_api . 
+3. You have to create a folder agile_skill_storage in D:\ drive before runing the following command: 
+
+docker run -it -d --name agile_skills_api -p 9991:9990 -p 8800:8080 -e TZ=Asia/Ho_Chi_Minh --restart unless-stopped -v D:\agile_skill_storage:/opt/jboss/wildfly/storage agile_skills_api:latest
+
+
+
+Deploy FE to local:
+
+//Ensure DockerFile_Dev don't change from begining.
+1. docker build -f DockerFile_Dev -t agile_skills_ui .
+
+//Docker run
+2. docker run -it -d --name agile_skills_ui --restart unless-stopped -e TZ=Asia/Ho_Chi_Minh -p 3000:3000 agile_skills_ui:latest
+

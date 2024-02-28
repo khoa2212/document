@@ -1,0 +1,84 @@
+1. Clone project from link
+git clone https://github.com/BuiVanTrungg/GITDemo.git 
+
+2. Show list branch
+git branch -a 
+
+3. Create a new branch
+git branch Amigo/NewFeature
+
+4. Checkout to new branch
+git checkout Amigo/NewFeature
+
+5. create a local branch with same name on the remote (git server)
+git fetch origin dev-aa:dev-aa
+(sau dau hai cham la ten nhanh moi o local, truoc 2 cham la nhanh tren server remote)
+git checkout dev-aa (de vao nhanh moi vua tao coi code xem giong tren server chua)
+..........
+
+6. Check what file you was changed
+git status
+
+7. Add file to you commit
+git add <tên-file> 
+or can add all of file you was change
+git add . 
+
+8. Commit your code 
+git commit -m "your comment"
+
+9. Pull code in feature branch
+git pull origin Amigo/NewFeature
+
+10. Push code in feature branch
+git push origin Amigo/NewFeature
+
+11. pull code from dev to feature branch
+git pull origin dev
+
+12. if conflict ==> fix conflict (using VS code)
+==> run on local to check features
+ 
+13. add all files and commit to staging
+git add .
+git commit -m "Amigo- new feature... -" 
+
+14. push code to feature branch (after merge with dev branch)
+git push origin Amigo/NewFeature
+
+
+15. check out dev branch
+git checkout dev
+
+(==> after checkout dev: git fetch
+
+16. pull code from remote server to dev local
+git pull
+
+17. pull code from Newfeature to current local (dev)
+git pull origin Amigo/NewFeature
+
+18. Note: in case someone change in dev branch while we working on local)
+solve conflict and build again in local
+git commit -m 'Amigo - add new feature'
+git push origin dev
+
+18+. if there no conflict, we just push directly to dev
+git push origin dev
+
+=====================
+Issues:
+ git remote update origin --prune
+
+all above when your new branch name don't show in the list of branch
+=====================
+
+Ref:
+Generate Key:
+https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+copy key:
+https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account
+finally change the remote(git remote set-url origin git@github.com:QuangNN1210/fmi-phuxuanhue-web.git) - tham khao them:
+https://docs.github.com/en/get-started/getting-started-with-git/managing-remote-repositories
+
+

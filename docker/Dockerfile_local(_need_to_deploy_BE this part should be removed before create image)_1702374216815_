@@ -1,0 +1,44 @@
+# Stage 1: Configure WildFly with PostgreSQL driver and datasource
+FROM quay.io/wildfly/wildfly:26.1.2.Final-jdk11 as builder
+RUN /opt/jboss/wildfly/bin/add-user.sh root Nonitclass123!@# --silent
+
+EXPOSE 8800 9990
+
+ENV DATASOURCE_NAME agileskillsDS
+ENV DATASOURCE_JNDI java:/agileskillsDS
+ENV POSTGRESQL_VERSION 42.6.0
+ENV JBOSS_HOME /opt/jboss/wildfly
+
+# information of installing server and database
+ARG DB_HOST=jdbc:postgresql://192.168.75.6:5466/agile_skill
+ARG DB_NAME=agile_skill
+ARG DB_USER=nhancute
+ARG DB_PASS=123456
+
+# Install PostgreSQL drivers and configure datasource
+# create storage folder and assign privilleges
+
+USER root
+
+RUN /bin/sh -c "$JBOSS_HOME/bin/standalone.sh &" && \
+  sleep 10 && \
+  mkdir -p /opt/jboss/wildfly/storage && \
+  chown jboss:jboss /opt/jboss/wildfly/storage && \
+  cd /tmp && \
+  wget -O "postgresql-${POSTGRESQL_VERSION}.jar" "http://search.maven.org/remotecontent?filepath=org/postgresql/postgresql/${POSTGRESQL_VERSION}/postgresql-${POSTGRESQL_VERSION}.jar" && \
+  $JBOSS_HOME/bin/jboss-cli.sh --connect --command="deploy /tmp/postgresql-${POSTGRESQL_VERSION}.jar" && \
+  $JBOSS_HOME/bin/jboss-cli.sh --connect --command="data-source add --name=${DATASOURCE_NAME} --driver-name=postgresql-${POSTGRESQL_VERSION}.jar  --driver-class=org.postgresql.Driver --jndi-name=${DATASOURCE_JNDI} --connection-url=${DB_HOST}  --user-name=${DB_USER} --password=${DB_PASS}" && \
+  $JBOSS_HOME/bin/jboss-cli.sh --connect --command=:shutdown && \
+  rm -rf $JBOSS_HOME/standalone/configuration/standalone_xml_history/ $JBOSS_HOME/standalone/log/*
+
+# Stage 2: Copy and deploy your WAR file
+FROM builder as deployer
+
+# Copy your WAR file to the WildFly deployment folder
+COPY ./target/agileskills.war $JBOSS_HOME/standalone/deployments/
+
+# Define the entry point
+CMD ["/opt/jboss/wildfly/bin/standalone.sh", "-b", "0.0.0.0", "-bmanagement", "0.0.0.0"]
+
+
+
